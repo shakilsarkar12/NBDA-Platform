@@ -1,0 +1,24 @@
+{
+  "name": "nbda-platform",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n fe,be -c blue,green \"npm run dev -w frontend\" \"npm run dev -w backend\"",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:backend": "npm run dev -w backend",
+    "build": "npm run build -w frontend && npm run build -w backend",
+    "lint": "npm run lint -w frontend && npm run lint -w backend",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

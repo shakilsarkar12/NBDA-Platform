@@ -1,0 +1,20 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: nbda-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - nbda_mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: nbda-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - nbda_redis_data:/data
+
+volumes:
+  nbda_mongo_data:
+  nbda_redis_data:
