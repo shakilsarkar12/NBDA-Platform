@@ -68,6 +68,15 @@ function requireNonEmpty(value: string, field: string): string {
   return normalized;
 }
 
+function isDuplicateKeyError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: number }).code === 11000
+  );
+}
+
 export async function registerUser(input: RegisterInput): Promise<{
   success: boolean;
   message: string;
@@ -164,11 +173,23 @@ export async function verifyOtpAndRegister(
 
   const hashedPassword = await bcrypt.hash(input.password, BCRYPT_ROUNDS);
 
-  const user = await User.create({
-    ...otpRecord.payload,
-    phone,
-    password: hashedPassword,
-  });
+  let user: UserDocument;
+  try {
+    user = await User.create({
+      ...otpRecord.payload,
+      phone,
+      password: hashedPassword,
+    });
+  } catch (error) {
+    if (isDuplicateKeyError(error)) {
+      throw new AppError(
+        "A user with this phone number already exists",
+        "PHONE_ALREADY_REGISTERED",
+        409
+      );
+    }
+    throw error;
+  }
 
   await Otp.deleteOne({ _id: otpRecord._id });
 

@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useLanguage } from "../providers/LanguageProvider";
 
 const navItems = [
-  { href: "#emergency-request", en: "Request Blood", bn: "রক্তের জন্য অনুরোধ করুন" },
-  { href: "#auth-registration", en: "Register as Donor", bn: "রক্তদাতা হোন" },
-  { href: "#auth-login", en: "Login", bn: "লগইন" },
+  { href: "/request-blood", en: "Request Blood", bn: "রক্তের জন্য অনুরোধ করুন" },
+  { href: "/register", en: "Register as Donor", bn: "রক্তদাতা হোন" },
+  { href: "/login", en: "Login", bn: "লগইন" },
 ];
 
 export function Header() {
@@ -15,7 +15,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-lg bg-[#DC2626] text-white grid place-items-center font-black">
             NB
           </div>
@@ -27,13 +27,13 @@ export function Header() {
               Naldanga Blood Donors Association
             </div>
           </div>
-        </div>
+        </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-700">
           {navItems.map((item) => (
-            <a key={item.href} href={item.href} className="hover:text-zinc-900">
+            <Link key={item.href} href={item.href} className="hover:text-zinc-900">
               {language === "bn" ? item.bn : item.en}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -56,7 +56,7 @@ export function Header() {
 
           <div className="md:hidden">
             <Link
-              href="#emergency-request"
+              href="/request-blood"
               className="rounded-md bg-[#DC2626] px-3 py-2 text-sm font-semibold text-white hover:bg-[#b91c1c]"
             >
               {language === "bn" ? "অনুরোধ" : "Request"}

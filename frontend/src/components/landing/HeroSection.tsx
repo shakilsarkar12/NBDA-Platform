@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "../providers/LanguageProvider";
 
 export function HeroSection() {
@@ -12,7 +13,7 @@ export function HeroSection() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto w-full max-w-6xl px-4 py-14 sm:py-20">
+      <div className="relative px-4 py-14 sm:py-20">
         <div className="mx-auto max-w-3xl text-center">
           <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#DC2626]">
             Naldanga Blood Donors Association
@@ -29,8 +30,8 @@ export function HeroSection() {
           )}
 
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <a
-              href="#emergency-request"
+            <Link
+              href="/request-blood"
               className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-6 py-4 text-base font-bold text-white shadow-sm transition hover:bg-[#b91c1c] sm:w-auto"
             >
               <span className="leading-tight">
@@ -39,10 +40,10 @@ export function HeroSection() {
                   Request Blood
                 </span>
               </span>
-            </a>
+            </Link>
 
-            <a
-              href="#auth-registration"
+            <Link
+              href="/register"
               className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#DC2626] px-6 py-4 text-base font-bold text-white shadow-sm transition hover:bg-[#b91c1c] sm:w-auto"
             >
               <span className="leading-tight">
@@ -51,7 +52,7 @@ export function HeroSection() {
                   Register as Donor
                 </span>
               </span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

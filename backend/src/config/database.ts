@@ -8,6 +8,7 @@ export async function connectDatabase(): Promise<void> {
     await mongoose.connect(env.mongodbUri, {
       serverSelectionTimeoutMS: 5000,
     });
+    await cleanupLegacyUserIndexes();
     console.log("[mongodb] connected");
   } catch (error) {
     console.error("\n[mongodb] connection failed");
@@ -19,6 +20,25 @@ export async function connectDatabase(): Promise<void> {
       "  Quick start: from repo root run  npm run docker:up\n"
     );
     throw error;
+  }
+}
+
+async function cleanupLegacyUserIndexes(): Promise<void> {
+  // Legacy schema previously had a unique `email` index; current user model
+  // no longer uses email. If the index still exists, it can cause E11000
+  // duplicate key errors on `email: null` for new registrations.
+  try {
+    await mongoose.connection.collection("users").dropIndex("email_1");
+    console.log("[mongodb] dropped legacy users.email_1 index");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (
+      message.includes("index not found") ||
+      message.includes("ns not found")
+    ) {
+      return;
+    }
+    console.warn("[mongodb] could not drop legacy users.email_1 index:", message);
   }
 }
 

@@ -22,16 +22,21 @@ function detectInitialLanguage(): AppLanguage {
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<AppLanguage>(() => {
+  const [language, setLanguageState] = useState<AppLanguage>("en");
+
+  React.useEffect(() => {
     try {
-      if (typeof window === "undefined") return "en";
       const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved === "bn" || saved === "en") return saved;
+      if (saved === "bn" || saved === "en") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setLanguageState(saved);
+        return;
+      }
+      setLanguageState(detectInitialLanguage());
     } catch {
-      // ignore (fallback below)
+      setLanguageState("en");
     }
-    return detectInitialLanguage();
-  });
+  }, []);
 
   const setLanguage = useMemo(
     () => (lang: AppLanguage) => {

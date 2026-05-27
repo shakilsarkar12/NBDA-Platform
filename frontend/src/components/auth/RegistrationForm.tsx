@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { postJson } from "@/lib/api";
 import { BLOOD_GROUPS } from "@/constants";
+import { isValidBdPhone } from "@/lib/validators";
 import type { AppLanguage } from "../providers/LanguageProvider";
 import { useLanguage } from "../providers/LanguageProvider";
 
@@ -32,6 +34,7 @@ const passwordHint =
 
 export function RegistrationForm() {
   const { language } = useLanguage();
+  const router = useRouter();
 
   const [step, setStep] = useState<RegisterStep>(1);
 
@@ -64,12 +67,14 @@ export function RegistrationForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [expiresAtIso, setExpiresAtIso] = useState<string | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState<number>(0);
 
   const t = useMemo(() => getCopy(language), [language]);
 
   const step1Valid =
     form.name.trim() &&
-    form.phone.trim() &&
+    isValidBdPhone(form.phone) &&
     form.bloodGroup.trim() &&
     form.division.trim() &&
     form.district.trim() &&
@@ -77,6 +82,24 @@ export function RegistrationForm() {
     form.village.trim();
 
   const step2Valid = otp.code.trim().length === 6 && otp.password.trim().length >= 8;
+  const otpExpired = step === 2 && secondsLeft <= 0;
+
+  React.useEffect(() => {
+    if (!expiresAtIso || step !== 2) return;
+    const expiry = expiresAtIso;
+
+    function tick() {
+      const left = Math.max(
+        0,
+        Math.floor((new Date(expiry).getTime() - Date.now()) / 1000)
+      );
+      setSecondsLeft(left);
+    }
+
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [expiresAtIso, step]);
 
   async function onRegisterStep1(e: React.FormEvent) {
     e.preventDefault();
@@ -84,7 +107,7 @@ export function RegistrationForm() {
     setSuccessMessage(null);
 
     if (!step1Valid) {
-      setError(t.errorFillAll);
+      setError("Please provide valid data, including a valid phone number.");
       return;
     }
 
@@ -103,6 +126,7 @@ export function RegistrationForm() {
 
       const result = await postJson<RegisterResponse>("/auth/register", payload);
       setOtpMeta({ phone: form.phone, expiresAt: result.expiresAt });
+      setExpiresAtIso(result.expiresAt);
       setStep(2);
       setSuccessMessage(result.message);
     } catch (err) {
@@ -121,6 +145,10 @@ export function RegistrationForm() {
       setError("OTP session missing. Please start registration again.");
       return;
     }
+    if (otpExpired) {
+      setError("OTP expired. Please request a new OTP.");
+      return;
+    }
     if (!step2Valid) {
       setError(t.errorInvalidOtpOrPassword);
       return;
@@ -137,8 +165,9 @@ export function RegistrationForm() {
       const result = await postJson<VerifyResponse>("/auth/verify-otp-and-register", payload);
       localStorage.setItem("accessToken", result.accessToken);
       localStorage.setItem("user", JSON.stringify(result.user));
-
-      setSuccessMessage(result.message);
+      const uniqueId = result.user.uniqueId ?? "N/A";
+      alert(`Registration successful! Your Unique User ID: ${uniqueId}`);
+      router.push("/login");
     } catch (err) {
       setError(err instanceof Error ? err.message : "OTP verification failed");
     } finally {
@@ -288,6 +317,16 @@ export function RegistrationForm() {
                     {otpMeta?.phone}
                   </span>
                 </div>
+                <div className="mt-1">
+                  Time left:{" "}
+                  <span
+                    className={`font-mono text-xs ${
+                      otpExpired ? "text-red-600" : "text-zinc-600"
+                    }`}
+                  >
+                    {formatTimeLeft(secondsLeft)}
+                  </span>
+                </div>
                 {otpMeta?.expiresAt && (
                   <div className="mt-1">
                     Expires at:{" "}
@@ -339,7 +378,7 @@ export function RegistrationForm() {
 
               <button
                 type="submit"
-                disabled={!step2Valid || loading}
+                disabled={!step2Valid || loading || otpExpired}
                 className="w-1/2 rounded-xl bg-[#DC2626] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#b91c1c] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? t.loading : t.verifyAndRegisterButton}
@@ -408,5 +447,16 @@ function getCopy(language: AppLanguage) {
     verifyAndRegisterButton: "Verify & Register",
     errorInvalidOtpOrPassword: "Invalid OTP or password.",
   };
+}
+
+function formatTimeLeft(totalSeconds: number): string {
+  if (totalSeconds <= 0) return "00:00";
+  const mins = Math.floor(totalSeconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const secs = Math.floor(totalSeconds % 60)
+    .toString()
+    .padStart(2, "0");
+  return `${mins}:${secs}`;
 }
 

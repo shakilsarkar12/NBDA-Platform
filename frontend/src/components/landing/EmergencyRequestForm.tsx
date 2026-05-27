@@ -2,6 +2,8 @@
 
 import React, { useMemo, useState } from "react";
 import { BLOOD_GROUPS } from "@/constants";
+import { getBloodRequestPath, postJson } from "@/lib/api";
+import { isValidBdPhone } from "@/lib/validators";
 
 type EmergencyRequestPayload = {
   patientName: string;
@@ -25,6 +27,7 @@ export function EmergencyRequestForm() {
   const [payload, setPayload] = useState<EmergencyRequestPayload>(initialPayload);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const isValid = useMemo(() => {
     return (
@@ -32,7 +35,7 @@ export function EmergencyRequestForm() {
       payload.bloodGroup.trim().length > 0 &&
       payload.bagsNeeded > 0 &&
       payload.hospitalNameAndAddress.trim().length > 0 &&
-      payload.relativeContact.trim().length > 0 &&
+      isValidBdPhone(payload.relativeContact) &&
       payload.deadline.trim().length > 0
     );
   }, [payload]);
@@ -40,16 +43,24 @@ export function EmergencyRequestForm() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage(null);
+    setError(null);
 
     if (!isValid) {
-      setMessage("Please fill all required fields.");
+      setError("Please fill all required fields with valid values.");
       return;
     }
 
     setSubmitting(true);
     try {
-      // Week 3 UI-only: backend integration comes in later weeks.
-      setMessage("Emergency request saved locally (UI placeholder).");
+      await postJson(getBloodRequestPath(), payload);
+      setMessage("Your request is pending volunteer verification.");
+      setPayload(initialPayload);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to submit request. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -181,6 +192,11 @@ export function EmergencyRequestForm() {
         {message && (
           <div className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
             {message}
+          </div>
+        )}
+        {error && (
+          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
           </div>
         )}
       </div>

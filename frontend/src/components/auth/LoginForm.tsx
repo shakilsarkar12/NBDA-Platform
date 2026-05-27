@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { postJson } from "@/lib/api";
+import { isValidBdPhone } from "@/lib/validators";
 import { useLanguage, type AppLanguage } from "../providers/LanguageProvider";
 
 type LoginResponse = {
@@ -19,6 +21,7 @@ type LoginResponse = {
 
 export function LoginForm() {
   const { language } = useLanguage();
+  const router = useRouter();
   const t = useMemo(() => getCopy(language), [language]);
 
   const [form, setForm] = useState({
@@ -30,7 +33,7 @@ export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const canSubmit = form.phone.trim().length > 0 && form.password.trim().length >= 8;
+  const canSubmit = isValidBdPhone(form.phone) && form.password.trim().length >= 8;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -52,8 +55,8 @@ export function LoginForm() {
       const result = await postJson<LoginResponse>("/auth/login", payload);
       localStorage.setItem("accessToken", result.accessToken);
       localStorage.setItem("user", JSON.stringify(result.user));
-
       setSuccess(result.message);
+      router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
