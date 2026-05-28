@@ -1,4 +1,5 @@
 import { authResolvers } from "./auth.resolvers.js";
+import { userResolvers } from "./user.resolvers.js";
 
 export const resolvers = {
   Query: {
@@ -6,8 +7,10 @@ export const resolvers = {
       status: "ok",
       timestamp: new Date().toISOString(),
     }),
+    ...userResolvers.Query,
   },
   Mutation: {
     ...authResolvers.Mutation,
+    ...userResolvers.Mutation,
   },
 };

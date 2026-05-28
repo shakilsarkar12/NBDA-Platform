@@ -45,6 +45,27 @@ export const typeDefs = gql`
     user: User!
   }
 
+  type DonorCard {
+    id: ID!
+    name: String!
+    bloodGroup: String!
+    role: UserRole!
+    isAvailable: Boolean!
+    maskedPhone: String!
+  }
+
+  type ViewDonorContactPayload {
+    success: Boolean!
+    message: String!
+    phone: String!
+  }
+
+  type UserPayload {
+    success: Boolean!
+    message: String!
+    user: User!
+  }
+
   input RegisterInput {
     name: String!
     phone: String!
@@ -69,6 +90,8 @@ export const typeDefs = gql`
 
   type Query {
     health: Health!
+    me: User
+    donors: [DonorCard!]!
   }
 
   type Mutation {
@@ -80,5 +103,14 @@ export const typeDefs = gql`
 
     """Authenticate with phone + password."""
     login(input: LoginInput!): AuthPayload!
+
+    """View raw donor contact (auth required, audit logged)."""
+    viewDonorContact(donorId: ID!): ViewDonorContactPayload!
+
+    """Set donor availability status."""
+    updateAvailability(isAvailable: Boolean!): UserPayload!
+
+    """Log blood donation and set user unavailable."""
+    logDonation: UserPayload!
   }
 `;

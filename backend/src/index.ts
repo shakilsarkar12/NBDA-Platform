@@ -9,6 +9,7 @@ import { createContext } from "./graphql/context.js";
 import { resolvers } from "./graphql/resolvers/index.js";
 import { typeDefs } from "./graphql/schema/index.js";
 import { createSocketServer } from "./sockets/index.js";
+import { startEligibilityResetWorker } from "./workers/eligibility.worker.js";
 
 async function bootstrap(): Promise<void> {
   await connectDatabase();
@@ -31,6 +32,7 @@ async function bootstrap(): Promise<void> {
   );
 
   createSocketServer(httpServer);
+  startEligibilityResetWorker();
 
   httpServer.listen(env.port, () => {
     console.log(`[server] http://localhost:${env.port}`);

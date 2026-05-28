@@ -52,7 +52,7 @@ const userSchema = new Schema<UserDocument>(
     points: { type: Number, default: 0, min: 0 },
     impactMetrics: { type: Number, default: 0, min: 0 },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "Users" }
 );
 
 userSchema.pre("save", async function () {
