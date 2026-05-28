@@ -1,6 +1,7 @@
 import type { Types } from "mongoose";
 import { ContactAuditLog } from "../models/ContactAuditLog.js";
 import { User, type UserDocument } from "../models/User.js";
+import { BLOOD_GROUPS, type BloodGroup } from "../types/enums.js";
 import { AppError } from "../utils/errors.js";
 
 const ELIGIBILITY_DAYS = 120;
@@ -84,15 +85,29 @@ export async function searchDonorsMasked(): Promise<
   Array<{
     id: string;
     name: string;
+    uniqueId: string;
     bloodGroup: string;
     role: string;
     isAvailable: boolean;
+    division: string;
+    district: string;
+    upazila: string;
     maskedPhone: string;
   }>
 > {
   const donors = await User.find(
     {},
-    { name: 1, bloodGroup: 1, role: 1, phone: 1, isAvailable: 1 }
+    {
+      name: 1,
+      uniqueId: 1,
+      bloodGroup: 1,
+      role: 1,
+      phone: 1,
+      isAvailable: 1,
+      division: 1,
+      district: 1,
+      upazila: 1,
+    }
   )
     .sort({ isAvailable: -1, points: -1, createdAt: -1 })
     .lean();
@@ -100,9 +115,55 @@ export async function searchDonorsMasked(): Promise<
   return donors.map((d) => ({
     id: d._id.toString(),
     name: d.name,
+    uniqueId: d.uniqueId ?? "",
     bloodGroup: d.bloodGroup,
     role: d.role,
     isAvailable: d.isAvailable,
+    division: d.division,
+    district: d.district,
+    upazila: d.upazila,
+    maskedPhone: maskPhone(d.phone),
+  }));
+}
+
+export interface DonorSearchFilters {
+  bloodGroup?: string;
+  division?: string;
+  district?: string;
+  upazila?: string;
+}
+
+export async function searchDonorsMaskedFiltered(filters: DonorSearchFilters) {
+  const query: Record<string, unknown> = {};
+  if (filters.bloodGroup) query.bloodGroup = filters.bloodGroup.toUpperCase();
+  if (filters.division) query.division = filters.division;
+  if (filters.district) query.district = filters.district;
+  if (filters.upazila) query.upazila = filters.upazila;
+
+  const donors = await User.find(query, {
+    name: 1,
+    uniqueId: 1,
+    bloodGroup: 1,
+    role: 1,
+    phone: 1,
+    isAvailable: 1,
+    division: 1,
+    district: 1,
+    upazila: 1,
+  })
+    .sort({ isAvailable: -1, points: -1, createdAt: -1 })
+    .lean();
+
+  return donors.map((d) => ({
+    id: d._id.toString(),
+    name: d.name,
+    uniqueId: d.uniqueId ?? "",
+    bloodGroup: d.bloodGroup,
+    role: d.role,
+    isAvailable: d.isAvailable,
+    division: d.division,
+    district: d.district,
+    upazila: d.upazila,
     maskedPhone: maskPhone(d.phone),
   }));
 }
@@ -134,5 +195,48 @@ export async function viewDonorContactWithAudit(
   });
 
   return { phone: viewed.phone };
+}
+
+export interface UpdateUserProfileInput {
+  name?: string;
+  bloodGroup?: string;
+  division?: string;
+  district?: string;
+  upazila?: string;
+  village?: string;
+  profileImageUrl?: string;
+  isAvailable?: boolean;
+}
+
+function normalizeBloodGroup(value: string): BloodGroup {
+  const normalized = value.trim().toUpperCase() as BloodGroup;
+  if (!BLOOD_GROUPS.includes(normalized)) {
+    throw new AppError("Invalid blood group", "VALIDATION_ERROR", 400);
+  }
+  return normalized;
+}
+
+export async function updateUserProfile(
+  userId: string,
+  input: UpdateUserProfileInput
+): Promise<UserDocument> {
+  const updates: Record<string, unknown> = {};
+
+  if (typeof input.name === "string") updates.name = input.name.trim();
+  if (typeof input.bloodGroup === "string")
+    updates.bloodGroup = normalizeBloodGroup(input.bloodGroup);
+  if (typeof input.division === "string") updates.division = input.division.trim();
+  if (typeof input.district === "string") updates.district = input.district.trim();
+  if (typeof input.upazila === "string") updates.upazila = input.upazila.trim();
+  if (typeof input.village === "string") updates.village = input.village.trim();
+  if (typeof input.profileImageUrl === "string")
+    updates.profileImageUrl = input.profileImageUrl.trim();
+  if (typeof input.isAvailable === "boolean") updates.isAvailable = input.isAvailable;
+
+  const user = await User.findByIdAndUpdate(userId, { $set: updates }, { new: true });
+  if (!user) {
+    throw new AppError("User not found", "USER_NOT_FOUND", 404);
+  }
+  return user;
 }
 

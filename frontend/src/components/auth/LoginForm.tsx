@@ -4,7 +4,9 @@ import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { postJson } from "@/lib/api";
 import { isValidBdPhone } from "@/lib/validators";
+import { useAuth } from "../providers/AuthProvider";
 import { useLanguage, type AppLanguage } from "../providers/LanguageProvider";
+import { useToast } from "../providers/ToastProvider";
 
 type LoginResponse = {
   success: boolean;
@@ -21,6 +23,8 @@ type LoginResponse = {
 
 export function LoginForm() {
   const { language } = useLanguage();
+  const { refreshUser } = useAuth();
+  const { showToast } = useToast();
   const router = useRouter();
   const t = useMemo(() => getCopy(language), [language]);
 
@@ -56,9 +60,13 @@ export function LoginForm() {
       localStorage.setItem("accessToken", result.accessToken);
       localStorage.setItem("user", JSON.stringify(result.user));
       setSuccess(result.message);
+      showToast(result.message, "success");
+      await refreshUser();
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      const msg = err instanceof Error ? err.message : "Login failed";
+      setError(msg);
+      showToast(msg, "error");
     } finally {
       setLoading(false);
     }

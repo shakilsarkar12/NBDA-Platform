@@ -1,6 +1,8 @@
 "use client";
 
 import { Header } from "@/components/layout/Header";
+import { useToast } from "@/components/providers/ToastProvider";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { getJson, patchJson, postJson } from "@/lib/api";
 import { useEffect, useMemo, useState } from "react";
 
@@ -31,6 +33,7 @@ export default function DashboardPage() {
   const [busyToggle, setBusyToggle] = useState(false);
   const [donors, setDonors] = useState<DonorPreview[]>([]);
   const [revealedContact, setRevealedContact] = useState<Record<string, string>>({});
+  const { showToast } = useToast();
 
   const token = useMemo(() => {
     if (typeof window === "undefined") return null;
@@ -81,7 +84,7 @@ export default function DashboardPage() {
       );
       setUser(res.user);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to update status");
+      showToast(err instanceof Error ? err.message : "Failed to update status", "error");
     } finally {
       setBusyToggle(false);
     }
@@ -97,7 +100,7 @@ export default function DashboardPage() {
       );
       setRevealedContact((prev) => ({ ...prev, [donorId]: res.phone }));
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to view contact");
+      showToast(err instanceof Error ? err.message : "Failed to view contact", "error");
     }
   }
 
@@ -110,9 +113,9 @@ export default function DashboardPage() {
         { token }
       );
       setUser(res.user);
-      alert("Donation logged. Availability set to Busy.");
+      showToast("Donation logged. Availability set to Busy.", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to log donation");
+      showToast(err instanceof Error ? err.message : "Failed to log donation", "error");
     }
   }
 
@@ -127,7 +130,12 @@ export default function DashboardPage() {
               Enterprise profile card with live availability management.
             </p>
 
-            {loading && <p className="mt-6 text-sm text-zinc-600">Loading profile...</p>}
+            {loading && (
+              <div className="mt-6 space-y-2">
+                <Skeleton className="h-4 w-40" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            )}
             {error && (
               <p className="mt-6 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
             )}

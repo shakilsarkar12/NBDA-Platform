@@ -8,7 +8,12 @@ import {
   type RegisterInput,
 } from "../services/auth.service.js";
 import { assertAuthenticated, requireAuth } from "../middleware/auth.middleware.js";
-import { logBloodDonation, setAvailability, getUserByIdOrThrow } from "../services/user.service.js";
+import {
+  logBloodDonation,
+  setAvailability,
+  getUserByIdOrThrow,
+  updateUserProfile,
+} from "../services/user.service.js";
 import { AppError } from "../utils/errors.js";
 
 export const authRouter = Router();
@@ -36,13 +41,13 @@ authRouter.post("/verify-otp-and-register", async (req, res) => {
   try {
     const input = req.body as CompleteRegistrationInput;
     const { user, accessToken } = await verifyOtpAndRegister(input);
+    setAuthCookie(res, accessToken);
     res.status(200).json({
       success: true,
       message: "Registration completed successfully.",
       accessToken,
       user,
     });
-    setAuthCookie(res, accessToken);
   } catch (error) {
     handleAuthRouteError(error, res);
   }
@@ -52,16 +57,21 @@ authRouter.post("/login", async (req, res) => {
   try {
     const input = req.body as LoginInput;
     const { user, accessToken } = await loginUser(input);
+    setAuthCookie(res, accessToken);
     res.status(200).json({
       success: true,
       message: "Login successful.",
       accessToken,
       user,
     });
-    setAuthCookie(res, accessToken);
   } catch (error) {
     handleAuthRouteError(error, res);
   }
+});
+
+authRouter.post("/logout", (_req, res) => {
+  res.clearCookie("nbda_token");
+  res.status(200).json({ success: true, message: "Logout successful." });
 });
 
 authRouter.get("/me", requireAuth, async (req, res, next) => {
@@ -102,6 +112,21 @@ authRouter.post("/donation/log", requireAuth, async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Donation logged successfully.",
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+authRouter.patch("/profile", requireAuth, async (req, res, next) => {
+  try {
+    const auth = assertAuthenticated(req);
+    const user = await updateUserProfile(auth.userId, req.body ?? {});
+    user.password = undefined as unknown as string;
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully.",
       user,
     });
   } catch (error) {

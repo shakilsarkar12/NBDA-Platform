@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { LiveCounterBadge } from "@/components/landing/LiveCounterBadge";
 import { SocialSection } from "@/components/landing/SocialSection";
+import { LiveRequestFeed } from "@/components/requests/LiveRequestFeed";
 
 export default function Home() {
   return (
@@ -14,6 +15,9 @@ export default function Home() {
         <div className="mt-2 mx-auto max-w-6xl px-4 grid gap-6 lg:grid-cols-2 lg:items-start">
           <LiveCounterBadge />
           <SocialSection />
+        </div>
+        <div className="mx-auto max-w-6xl px-4">
+          <LiveRequestFeed compact />
         </div>
       </main>
     </div>

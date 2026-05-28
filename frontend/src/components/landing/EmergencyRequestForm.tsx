@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { BLOOD_GROUPS } from "@/constants";
 import { getBloodRequestPath, postJson } from "@/lib/api";
 import { isValidBdPhone } from "@/lib/validators";
+import { useToast } from "../providers/ToastProvider";
 
 type EmergencyRequestPayload = {
   patientName: string;
@@ -24,6 +25,7 @@ const initialPayload: EmergencyRequestPayload = {
 };
 
 export function EmergencyRequestForm() {
+  const { showToast } = useToast();
   const [payload, setPayload] = useState<EmergencyRequestPayload>(initialPayload);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -52,15 +54,19 @@ export function EmergencyRequestForm() {
 
     setSubmitting(true);
     try {
-      await postJson(getBloodRequestPath(), payload);
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+      await postJson(getBloodRequestPath(), payload, { token });
       setMessage("Your request is pending volunteer verification.");
       setPayload(initialPayload);
+      showToast("Request submitted successfully", "success");
     } catch (err) {
-      setError(
+      const msg =
         err instanceof Error
           ? err.message
-          : "Failed to submit request. Please try again."
-      );
+          : "Failed to submit request. Please try again.";
+      setError(msg);
+      showToast(msg, "error");
     } finally {
       setSubmitting(false);
     }

@@ -4,6 +4,7 @@ import { env } from "./config/env.js";
 import { authRouter } from "./routes/auth.js";
 import { donorsRouter } from "./routes/donors.js";
 import { healthRouter } from "./routes/health.js";
+import { requestsRouter } from "./routes/requests.js";
 import { AppError } from "./utils/errors.js";
 
 export function createApp() {
@@ -19,6 +20,7 @@ export function createApp() {
 
   app.use("/auth", authRouter);
   app.use("/donors", donorsRouter);
+  app.use("/requests", requestsRouter);
   app.use("/health", healthRouter);
 
   app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

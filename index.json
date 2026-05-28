@@ -1,0 +1,250 @@
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26581"
+  },
+  "name": "Karim Hasan",
+  "phone": "01822222222",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "O+",
+  "division": "Chattogram",
+  "district": "Cumilla",
+  "upazila": "Muradnagar",
+  "village": "Bangra",
+  "role": "User",
+  "isAvailable": true,
+  "points": 15,
+  "impactMetrics": 8,
+  "createdAt": {
+    "$date": "2026-05-28T03:11:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:11:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0003",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26582"
+  },
+  "name": "Sabbir Ahmed",
+  "phone": "01833333333",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "AB+",
+  "division": "Rajshahi",
+  "district": "Bogura",
+  "upazila": "Shibganj",
+  "village": "Koyerkhali",
+  "role": "User",
+  "isAvailable": false,
+  "points": 7,
+  "impactMetrics": 3,
+  "createdAt": {
+    "$date": "2026-05-28T03:12:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:12:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0004",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26583"
+  },
+  "name": "Nusrat Jahan",
+  "phone": "01844444444",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "B-",
+  "division": "Khulna",
+  "district": "Jashore",
+  "upazila": "Bagherpara",
+  "village": "Narikelbaria",
+  "role": "User",
+  "isAvailable": true,
+  "points": 20,
+  "impactMetrics": 11,
+  "createdAt": {
+    "$date": "2026-05-28T03:13:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:13:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0005",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26584"
+  },
+  "name": "Mim Akter",
+  "phone": "01855555555",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "O-",
+  "division": "Sylhet",
+  "district": "Moulvibazar",
+  "upazila": "Sreemangal",
+  "village": "Kalighat",
+  "role": "User",
+  "isAvailable": true,
+  "points": 12,
+  "impactMetrics": 6,
+  "createdAt": {
+    "$date": "2026-05-28T03:14:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:14:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0006",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26585"
+  },
+  "name": "Tanvir Islam",
+  "phone": "01866666666",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "A-",
+  "division": "Barishal",
+  "district": "Patuakhali",
+  "upazila": "Bauphal",
+  "village": "Adabaria",
+  "role": "User",
+  "isAvailable": false,
+  "points": 5,
+  "impactMetrics": 2,
+  "createdAt": {
+    "$date": "2026-05-28T03:15:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:15:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0007",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26586"
+  },
+  "name": "Farzana Yasmin",
+  "phone": "01877777777",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "AB-",
+  "division": "Rangpur",
+  "district": "Dinajpur",
+  "upazila": "Birganj",
+  "village": "Moricha",
+  "role": "User",
+  "isAvailable": true,
+  "points": 30,
+  "impactMetrics": 15,
+  "createdAt": {
+    "$date": "2026-05-28T03:16:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:16:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0008",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26587"
+  },
+  "name": "Jahid Hossain",
+  "phone": "01888888888",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "B+",
+  "division": "Mymensingh",
+  "district": "Jamalpur",
+  "upazila": "Islampur",
+  "village": "Pathorshi",
+  "role": "User",
+  "isAvailable": true,
+  "points": 18,
+  "impactMetrics": 9,
+  "createdAt": {
+    "$date": "2026-05-28T03:17:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:17:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0009",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26588"
+  },
+  "name": "Rifat Kabir",
+  "phone": "01911111111",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "O+",
+  "division": "Dhaka",
+  "district": "Narsingdi",
+  "upazila": "Raipura",
+  "village": "Mirzanagar",
+  "role": "User",
+  "isAvailable": false,
+  "points": 9,
+  "impactMetrics": 4,
+  "createdAt": {
+    "$date": "2026-05-28T03:18:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:18:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0010",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26589"
+  },
+  "name": "Sharmin Sultana",
+  "phone": "01922222222",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "A+",
+  "division": "Chattogram",
+  "district": "Feni",
+  "upazila": "Daganbhuiyan",
+  "village": "Matubhuiyan",
+  "role": "User",
+  "isAvailable": true,
+  "points": 25,
+  "impactMetrics": 12,
+  "createdAt": {
+    "$date": "2026-05-28T03:19:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:19:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0011",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a17b149afd786ec7ee26590"
+  },
+  "name": "Mahadi Hasan",
+  "phone": "01933333333",
+  "password": "$2b$12$7Nnbqj8jZpB6x0NAl4WmyeGrollIwtG7GfmehiUXpo0z2DIou9Qoy",
+  "bloodGroup": "B-",
+  "division": "Khulna",
+  "district": "Satkhira",
+  "upazila": "Tala",
+  "village": "Magura",
+  "role": "User",
+  "isAvailable": true,
+  "points": 14,
+  "impactMetrics": 7,
+  "createdAt": {
+    "$date": "2026-05-28T03:20:01.141Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-28T03:20:01.141Z"
+  },
+  "uniqueId": "NBDA-2026-0012",
+  "__v": 0
+}

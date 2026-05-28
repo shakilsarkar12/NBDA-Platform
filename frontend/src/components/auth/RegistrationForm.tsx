@@ -7,6 +7,7 @@ import { BLOOD_GROUPS } from "@/constants";
 import { isValidBdPhone } from "@/lib/validators";
 import type { AppLanguage } from "../providers/LanguageProvider";
 import { useLanguage } from "../providers/LanguageProvider";
+import { useToast } from "../providers/ToastProvider";
 
 type RegisterStep = 1 | 2;
 type BloodGroup = (typeof BLOOD_GROUPS)[number];
@@ -34,6 +35,7 @@ const passwordHint =
 
 export function RegistrationForm() {
   const { language } = useLanguage();
+  const { showToast } = useToast();
   const router = useRouter();
 
   const [step, setStep] = useState<RegisterStep>(1);
@@ -129,8 +131,11 @@ export function RegistrationForm() {
       setExpiresAtIso(result.expiresAt);
       setStep(2);
       setSuccessMessage(result.message);
+      showToast(result.message, "success");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      const msg = err instanceof Error ? err.message : "Registration failed";
+      setError(msg);
+      showToast(msg, "error");
     } finally {
       setLoading(false);
     }
@@ -166,10 +171,12 @@ export function RegistrationForm() {
       localStorage.setItem("accessToken", result.accessToken);
       localStorage.setItem("user", JSON.stringify(result.user));
       const uniqueId = result.user.uniqueId ?? "N/A";
-      alert(`Registration successful! Your Unique User ID: ${uniqueId}`);
+      showToast(`Registration successful! Unique ID: ${uniqueId}`, "success");
       router.push("/login");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "OTP verification failed");
+      const msg = err instanceof Error ? err.message : "OTP verification failed";
+      setError(msg);
+      showToast(msg, "error");
     } finally {
       setLoading(false);
     }

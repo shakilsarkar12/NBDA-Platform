@@ -17,6 +17,7 @@ export interface IUser {
   lastDonatedAt?: Date;
   points: number;
   impactMetrics: number;
+  profileImageUrl?: string;
 }
 
 export interface UserDocument extends IUser, Document {
@@ -51,6 +52,7 @@ const userSchema = new Schema<UserDocument>(
     lastDonatedAt: { type: Date },
     points: { type: Number, default: 0, min: 0 },
     impactMetrics: { type: Number, default: 0, min: 0 },
+    profileImageUrl: { type: String, trim: true },
   },
   { timestamps: true, collection: "Users" }
 );

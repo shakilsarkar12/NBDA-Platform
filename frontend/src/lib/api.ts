@@ -1,7 +1,7 @@
 const backendUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
 const bloodRequestPath =
-  process.env.NEXT_PUBLIC_BLOOD_REQUEST_PATH ?? "/request-blood";
+  process.env.NEXT_PUBLIC_BLOOD_REQUEST_PATH ?? "/requests";
 
 type ApiErrorBody = {
   success?: boolean;

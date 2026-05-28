@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ApolloAppProvider } from "@/components/providers/apollo-provider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
+import { ToastProvider } from "@/components/providers/ToastProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +34,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <LanguageProvider>
-          <ApolloAppProvider>{children}</ApolloAppProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <ApolloAppProvider>{children}</ApolloAppProvider>
+            </ToastProvider>
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>
